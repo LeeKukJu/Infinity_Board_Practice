@@ -7,5 +7,7 @@ import kr.or.ddit.board.vo.FoodBoardVO;
 public interface BoardService {
 
 	public List<FoodBoardVO> getBoardList();
+
+	public List<FoodBoardVO> getAppendList(int rowNum);
 	
 }

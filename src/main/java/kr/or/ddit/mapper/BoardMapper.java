@@ -8,4 +8,6 @@ public interface BoardMapper {
 
 	public List<FoodBoardVO> getBoardList();
 
+	public List<FoodBoardVO> getAppendList(int rowNum);
+
 }

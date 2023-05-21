@@ -37,11 +37,10 @@
 							<div class="card cardList m-0">
 								<div class="card-body">
 									<div class="row mb-3">
-										<div class="col-sm-7">
+										<div class="col-sm-7 pr-0">
 											<span class="writeDate font-weight-bold">작성일| <fmt:formatDate value="${board.writeDate }" pattern="yyyy-MM-dd"/></span>
 										</div>
-										<div
-											class="col-sm-5 d-flex align-items-center justify-content-end">
+										<div class="col-sm-5 d-flex align-items-center justify-content-end pr-0">
 											
 											<img class="food_img mr-2" src="/resources/images/${board.foodType }.png"
 												alt=""> <span class="badge badge-pill badge-info">${board.foodType }</span>
@@ -103,4 +102,123 @@
 	</c:choose>
 </div>
 
+<script>
+    $(function(){
+        $(window).scrollTop(0);
+        let scrollHeight = null;
+        let scrollPosition = null;
+        let isFetchingDate = false;
+        let rowNum = 21;
+
+        $(document).on("scroll", function(){
+            // 스크롤 끝까지 내리면 document 길이 = window 높이 + 움직인 스크롤 길이
+            scrollHeight = $(document).height();
+            scrollPosition = $(window).height() + $(document).scrollTop();
+            console.log("스크롤높이:", scrollHeight, "스크롤위치:", scrollPosition, scrollHeight - scrollPosition);
+
+            let threshold = 300;
+            
+
+            if(!isFetchingDate && scrollHeight - scrollPosition <= threshold) {
+                isFetchingDate = true;
+
+                $.ajax({
+                    type: "get",
+                    url: `/board/appendList/\${rowNum}`,
+                    success: function(res){
+                        console.log("rowNum:", rowNum);
+
+                        rowNum = rowNum + 20;
+
+                        let str = "";
+                        $.each(res, function(i, item){
+                            i += 1;
+                            var timestamp = item.writeDate; 
+                            var date = new Date(timestamp); 
+                            var year = date.getFullYear(); 
+                            var month = ("0" + (date.getMonth() + 1)).slice(-2);
+                            var day = ("0" + date.getDate()).slice(-2);
+                            var formattedDate = year + "-" + month + "-" + day;
+
+                            if(i%4 == 1){
+                                str += `<div class="row mb-3">`;
+                            }
+                            str += `
+                                <div class="col-sm-3">
+                                    <div class="card cardList m-0">
+                                        <div class="card-body">
+                                            <div class="row mb-3">
+                                                <div class="col-sm-7 pr-0">
+                                                    <span class="writeDate font-weight-bold">작성일| \${formattedDate}</span>
+                                                </div>
+                                                <div
+                                                    class="col-sm-5 d-flex align-items-center justify-content-end pr-0">
+                                                    
+                                                    <img class="food_img mr-2" src="/resources/images/\${item.foodType }.png"
+                                                        alt=""> <span class="badge badge-pill badge-info">\${item.foodType }</span>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-12 d-flex justify-content-center">
+                                                    <h3>
+                                                        <span class="badge badge-primary">\${item.resName }</span>
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <h3 class="m-0">
+                                                        <span class="badge badge-warning">평점</span> <span>\${item.rating }</span>
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer p-2">
+                                            <div
+                                                class="d-flex justify-content-between align-items-center px-2">
+                                                <span class="badge badge-success" style="font-size: 13px;">\${item.writer }</span>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div
+                                                        class="d-flex justify-content-between align-items-center mr-2">
+                                                        <svg stroke="currentColor" fill="currentColor"
+                                                            stroke-width="0" viewBox="0 0 1024 1024" color="#999999"
+                                                            height="24" width="24" xmlns="http://www.w3.org/2000/svg"
+                                                            style="color: rgb(153, 153, 153);">
+                                                    <path
+                                                                d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 0 0 0 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z">
+                                                    </path>
+                                                </svg>
+                                                        <sapn class="ml-1 font-weight-bold">\${item.views }</sapn>
+                                                    </div>
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <svg stroke="currentColor" fill="currentColor"
+                                                            stroke-width="0" viewBox="0 0 512 512" color="#999999"
+                                                            height="18" width="18" xmlns="http://www.w3.org/2000/svg"
+                                                            style="color: rgb(153, 153, 153);">
+                                                    <path
+                                                                d="M256 32C114.6 32 0 125.1 0 240c0 47.6 19.9 91.2 52.9 126.3C38 405.7 7 439.1 6.5 439.5c-6.6 7-8.4 17.2-4.6 26S14.4 480 24 480c61.5 0 110-25.7 139.1-46.3C192 442.8 223.2 448 256 448c141.4 0 256-93.1 256-208S397.4 32 256 32zm0 368c-26.7 0-53.1-4.1-78.4-12.1l-22.7-7.2-19.5 13.8c-14.3 10.1-33.9 21.4-57.5 29 7.3-12.1 14.4-25.7 19.9-40.2l10.6-28.1-20.6-21.8C69.7 314.1 48 282.2 48 240c0-88.2 93.3-160 208-160s208 71.8 208 160-93.3 160-208 160z">
+                                                    </path>
+                                                </svg>
+                                                        <span class="ml-1 font-weight-bold">\${item.commentNum }</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            if(i%4 == 0){
+                                str += `</div>`;
+                            }
+                        });
+                        $(".contentList").append(str);
+                        isFetchingDate = false;
+                    }
+                });
+            }
+        });
+
+
+    });
+</script>
 

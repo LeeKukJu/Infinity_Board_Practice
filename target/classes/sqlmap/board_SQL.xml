@@ -12,4 +12,16 @@
 		WHERE rn >= 1 AND rownum <= 20
 		]]>
 	</select>
+	
+	<select id="getAppendList" resultType="foodBoardVO">
+		SELECT *
+		FROM (
+		  SELECT rownum as rn, res_board.*
+		  FROM res_board
+		  ORDER BY board_no
+		)
+		<![CDATA[
+		WHERE rn >= #{rowNum} AND rownum <= 20
+		]]>
+	</select>
 </mapper>

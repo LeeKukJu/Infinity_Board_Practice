@@ -8,7 +8,7 @@
 	<!-- dataSource : 데이터베이스와 관련된 정보를 설정한다. -->
 	 <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
 		 <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
-		 <property name="url" value="jdbc:oracle:thin:@112.220.114.130:1521:xe"/>
+		 <property name="url" value="jdbc:log4jdbc:oracle:thin:@112.220.114.130:1521:xe"/>
 		 <property name="username" value="team5_202210M"/>
 		 <property name="password" value="java"/>
 	 </bean>

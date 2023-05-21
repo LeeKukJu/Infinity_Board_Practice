@@ -22,4 +22,9 @@ public class BoardServiceImpl implements BoardService{
 		return mapper.getBoardList();
 	}
 
+	@Override
+	public List<FoodBoardVO> getAppendList(int rowNum) {
+		return mapper.getAppendList(rowNum);
+	}
+
 }

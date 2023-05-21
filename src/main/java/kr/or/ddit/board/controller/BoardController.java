@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.ddit.board.service.BoardService;
 import kr.or.ddit.board.vo.FoodBoardVO;
@@ -28,5 +30,12 @@ public class BoardController {
 		model.addAttribute("boardList", boardList);
 		
 		return "board/list";
+	}
+	
+	@GetMapping("/appendList/{rowNum}")
+	@ResponseBody
+	public List<FoodBoardVO> appendList(@PathVariable int rowNum) {
+		List<FoodBoardVO> boardList = service.getAppendList(rowNum);
+		return boardList;
 	}
 }
